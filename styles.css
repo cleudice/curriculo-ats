@@ -464,5 +464,9 @@ textarea{resize:vertical;min-height:60px;line-height:1.4;}
     padding:0;
     border-radius:0;
   }
+  /* min-height:297mm no .visual-wrap soma aos 14mm+14mm de margem do @page e
+     estoura pra uma 2ª página em branco em toda exportação — sem isso a barra
+     lateral já preenche a altura real do conteúdo via align-items:stretch. */
+  .visual-wrap{min-height:auto;}
   @page{size:A4;margin:14mm 14mm;}
 }

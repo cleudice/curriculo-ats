@@ -595,7 +595,8 @@
       @media print{
         body{background:#fff;padding:0;}
         .printbar{display:none;}
-        .page{box-shadow:none;margin:0;padding:0;}
+        .page{box-shadow:none;margin:0;padding:0;min-height:auto;}
+        .visual-wrap{min-height:auto;}
         @page{size:A4;margin:14mm 14mm;}
       }
     `;
