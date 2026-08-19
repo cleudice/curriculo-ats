@@ -1,0 +1,51 @@
+{
+  "nome": "Maria da Silva",
+  "cargo": "Desenvolvedora Backend Java",
+  "telefone": "(11) 91234-5678",
+  "email": "maria.silva@email.com",
+  "cidade": "São Paulo, SP",
+  "linkedin": "linkedin.com/in/mariasilva",
+  "github": "github.com/mariasilva",
+  "foto": "",
+  "resumo": "Desenvolvedora backend com 4 anos de experiência em Java e Spring Boot, com histórico de redução de custo de infraestrutura e melhoria de performance em ambientes de alta escala.",
+  "habilidades": "Java, Spring Boot, PostgreSQL, Docker, Kubernetes, AWS, Git, RabbitMQ",
+  "certificacoes": "AWS Certified Cloud Practitioner — 2025\nFormação Spring Boot — Alura, 2024",
+  "extra": "",
+  "experiencia": [
+    {
+      "cargo": "Desenvolvedora Backend Pleno",
+      "empresa": "TechCorp",
+      "inicio": "2023-02",
+      "fim": "",
+      "atual": true,
+      "descricao": "Reduzi o tempo médio de resposta da API principal em 30% através de cache distribuído com Redis\nLiderei a migração de 12 microsserviços de EC2 para Kubernetes, reduzindo custo de infraestrutura em 22%\nImplementei pipeline de CI/CD que reduziu o tempo de deploy de 40min para 6min"
+    },
+    {
+      "cargo": "Desenvolvedora Backend Júnior",
+      "empresa": "StartupX",
+      "inicio": "2021-01",
+      "fim": "2023-01",
+      "atual": false,
+      "descricao": "Desenvolvi módulo de pagamentos processando +50 mil transações/mês com 99.9% de disponibilidade\nParticipei da reescrita do monolito legado para arquitetura de microsserviços"
+    }
+  ],
+  "formacao": [
+    {
+      "curso": "Bacharelado em Ciência da Computação",
+      "instituicao": "USP",
+      "inicio": "2017-02",
+      "fim": "2020-12"
+    }
+  ],
+  "idiomas": [
+    { "idioma": "Português", "nivel": "Nativo" },
+    { "idioma": "Inglês", "nivel": "Avançado" }
+  ],
+  "projetos": [
+    {
+      "nome": "API de pagamentos open source",
+      "link": "https://github.com/mariasilva/pagamentos-api",
+      "descricao": "API REST de pagamentos com 99.9% de uptime, +300 estrelas no GitHub"
+    }
+  ]
+}

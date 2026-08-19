@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Currículo</title>
+<meta name="description" content="Gerador de currículo gratuito, offline e sem rastreamento. Exporte em PDF ou publique como site no GitHub Pages.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="topbar">
+  <h1>📄 Gerador de Currículo <small>offline · sem servidor · seus dados não saem do navegador</small></h1>
+  <div class="actions">
+    <button id="btnImport" class="ghost">📂 Importar JSON</button>
+    <input type="file" id="fileImport" accept="application/json">
+    <button id="btnExportJson" class="ghost">💾 Salvar JSON</button>
+    <button id="btnExportSite" class="ghost">🌐 Baixar site (GitHub Pages)</button>
+    <button id="btnPrint" class="primary">🖨️ Exportar PDF</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- ===================== FORM ===================== -->
+  <div class="form-panel" id="form">
+
+    <details class="section" open>
+      <summary>Dados pessoais</summary>
+      <div class="section-body">
+        <label>Área de atuação <span style="font-weight:400;">(ajusta as dicas do formulário abaixo — não aparece no currículo)</span>
+          <select id="areaAtuacao" data-field="area">
+            <option value="">Geral / prefiro não especificar</option>
+            <option value="tech">Tecnologia / Desenvolvimento</option>
+            <option value="design">Design / Criativo</option>
+            <option value="academico">Acadêmico / Pesquisa</option>
+            <option value="comercial">Comercial / Vendas</option>
+            <option value="saude">Saúde</option>
+            <option value="juridico">Jurídico</option>
+            <option value="engenharia">Engenharia</option>
+            <option value="educacao">Educação</option>
+            <option value="administrativo">Administrativo / Financeiro</option>
+            <option value="outra">Outra área</option>
+          </select>
+        </label>
+        <p class="hint" id="areaHint">Escolha sua área para ver dicas específicas de preenchimento. As seções do formulário continuam as mesmas — use "Seções personalizadas", no fim do formulário, para adicionar qualquer informação própria da sua área (registro profissional, publicações, prêmios etc.).</p>
+        <label>Nome completo
+          <input type="text" data-field="nome" placeholder="Ex: Maria da Silva">
+        </label>
+        <label>Cargo / área alvo
+          <input type="text" data-field="cargo" placeholder="Ex: Desenvolvedora Backend Java">
+        </label>
+        <div class="row2">
+          <label>Telefone
+            <input type="tel" data-field="telefone" placeholder="(11) 91234-5678">
+          </label>
+          <label>E-mail
+            <input type="email" data-field="email" placeholder="nome@email.com">
+          </label>
+        </div>
+        <div class="row2">
+          <label>Cidade / UF
+            <input type="text" data-field="cidade" placeholder="São Paulo, SP">
+          </label>
+          <label>LinkedIn (usuário ou URL)
+            <input type="text" data-field="linkedin" placeholder="linkedin.com/in/seu-usuario">
+          </label>
+        </div>
+        <div class="row2">
+          <label>GitHub / Portfólio
+            <input type="text" data-field="github" placeholder="github.com/seu-usuario">
+          </label>
+          <label>Foto (URL ou deixe em branco)
+            <input type="text" data-field="foto" placeholder="https://.../foto.jpg">
+          </label>
+        </div>
+        <p class="hint warn">⚠️ Foto, CPF/RG, estado civil, religião e data de nascimento foram deixados de fora de propósito. Recrutadores no Brasil e sistemas ATS recomendam <b>não incluir</b> essas informações: elas não têm relação com a vaga, expõem dados sensíveis (LGPD) e podem introduzir viés inconsciente na triagem. Veja o guia completo no rodapé da página.</p>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Resumo profissional</summary>
+      <div class="section-body">
+        <p class="hint">2 a 4 linhas objetivas: quem você é, sua principal força técnica e um resultado concreto. Evite frases genéricas como "busco crescimento profissional".</p>
+        <label>Resumo
+          <textarea data-field="resumo" rows="4" placeholder="Ex: Desenvolvedora backend com 4 anos de experiência em Java e Spring Boot, com histórico de redução de 30% no tempo de resposta de APIs em ambiente de alta escala."></textarea>
+        </label>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Experiência profissional</summary>
+      <div class="section-body" id="listExperiencia">
+        <p class="hint">Ordem cronológica reversa (mais recente primeiro). Use verbos de ação e, sempre que possível, números (%, R$, tempo, escala).</p>
+      </div>
+      <div class="section-body" style="padding-top:0;">
+        <button class="small" id="addExperiencia">+ adicionar experiência</button>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Formação acadêmica</summary>
+      <div class="section-body">
+        <label class="checkbox-row">
+          <input type="checkbox" data-field="prioridadeFormacao">
+          <span>Sou estudante ou recém-formado(a) — mostrar Formação antes de Experiência no currículo</span>
+        </label>
+      </div>
+      <div class="section-body" id="listFormacao"></div>
+      <div class="section-body" style="padding-top:0;">
+        <button class="small" id="addFormacao">+ adicionar formação</button>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Habilidades técnicas</summary>
+      <div class="section-body">
+        <p class="hint">Separe por vírgula. Coloque as mais relevantes para a vaga primeiro (hard skills antes de soft skills).</p>
+        <label>Habilidades
+          <input type="text" data-field="habilidades" placeholder="Java, Spring Boot, PostgreSQL, Docker, AWS, Git">
+        </label>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Idiomas</summary>
+      <div class="section-body" id="listIdiomas"></div>
+      <div class="section-body" style="padding-top:0;">
+        <button class="small" id="addIdioma">+ adicionar idioma</button>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Certificações e cursos</summary>
+      <div class="section-body">
+        <p class="hint">Um por linha. Cite apenas cursos relevantes e recentes — liste excessiva de cursos genéricos pesa contra você.</p>
+        <label>Certificações
+          <textarea data-field="certificacoes" rows="3" placeholder="AWS Certified Cloud Practitioner — 2025&#10;Formação Spring Boot — Alura, 2024"></textarea>
+        </label>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Projetos / Links</summary>
+      <div class="section-body" id="listProjetos">
+        <p class="hint">Ótimo para devs: 2 a 4 projetos relevantes com link.</p>
+      </div>
+      <div class="section-body" style="padding-top:0;">
+        <button class="small" id="addProjeto">+ adicionar projeto</button>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Seções personalizadas</summary>
+      <div class="section-body">
+        <p class="hint">Use para qualquer coisa que as seções acima não cobrem: registro profissional (CREA, OAB, CRM, COREN, CRC, CRECI...), publicações e congressos, voluntariado, prêmios e reconhecimentos, palestras, patentes, associações profissionais etc. Cada seção vira um bloco novo no currículo, na ordem em que você adicionar.</p>
+      </div>
+      <div class="section-body" id="listCustom"></div>
+      <div class="section-body" style="padding-top:0;">
+        <button class="small" id="addCustom">+ adicionar seção</button>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Zona de risco: dados pessoais extras</summary>
+      <div class="section-body">
+        <p class="hint warn">A maioria dos especialistas em recrutamento recomenda NÃO preencher isso. Deixe em branco a menos que a vaga peça explicitamente (ex.: alguns editais de concurso público).</p>
+        <label>Informações adicionais (opcional)
+          <textarea data-field="extra" rows="2" placeholder="Deixe em branco na maioria dos casos"></textarea>
+        </label>
+      </div>
+    </details>
+
+    <button class="danger" id="btnClear" style="align-self:flex-start;">🗑️ Limpar tudo</button>
+  </div>
+
+  <!-- ===================== PREVIEW ===================== -->
+  <div class="preview-wrap">
+    <div class="page">
+      <div class="resume" id="resumePreview"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  <hr style="border:none;border-top:1px solid var(--border);margin:0 0 20px;">
+  <h2 style="font-size:15px;">Guia rápido — o que colocar (e o que não colocar) em um currículo em 2026</h2>
+  <p><b>✅ Inclua sempre:</b> nome, cargo-alvo, contato profissional (telefone, e-mail, cidade/UF, LinkedIn e, se for da área tech, GitHub/portfólio), um resumo curto e objetivo, experiências em ordem cronológica reversa com resultados quantificados, formação, habilidades técnicas relevantes para a vaga e idiomas com nível real (básico/intermediário/avançado/fluente).</p>
+  <p><b>🚫 Evite:</b> foto (gera viés inconsciente na triagem e é dispensável na maioria dos processos — algumas empresas americanas e multinacionais chegam a descartar currículos com foto automaticamente), CPF/RG/título de eleitor, estado civil, religião, data de nascimento/idade (no Brasil é ilegal a empresa exigir isso na contratação), objetivo genérico ("busco crescimento profissional"), "referências disponíveis mediante solicitação", endereço completo, tabelas e colunas múltiplas complexas (quebram a leitura de sistemas ATS), e fontes decorativas ou texto dentro de imagem.</p>
+  <p><b>📐 Formato recomendado:</b> uma coluna, cabeçalhos de seção padrão (para o ATS reconhecer), fonte padrão do sistema (Arial/Helvetica/Segoe UI), corpo de texto 10–12pt, PDF gerado a partir de HTML real (texto selecionável — nunca print de imagem ou scan), nome do arquivo <code>Nome_Sobrenome_Cargo.pdf</code> sem espaços/acentos, margens de 1,5–2cm, bullets de no máximo duas linhas.</p>
+  <p><b>📏 Tamanho:</b> até ~5 anos de experiência, 1 página; depois disso, 2 páginas se houver conquistas que justifiquem. Currículo acadêmico/pesquisa é, na prática, um <b>CV</b> — publicações e congressos se acumulam e não têm limite de página.</p>
+  <p>Este gerador já aplica essas boas práticas por padrão: por isso campos como foto, CPF/RG e estado civil não aparecem no formulário principal — apenas na seção opcional "Zona de risco", caso você realmente precise deles. Para necessidades específicas de área (registro profissional, publicações, prêmios, voluntariado...), use a seção <b>"Seções personalizadas"</b> — o seletor <b>"Área de atuação"</b> no topo do formulário só ajusta as dicas de preenchimento, não aparece no currículo.</p>
+  <p><b>Como publicar seu currículo como site (GitHub Pages):</b> clique em <b>"🌐 Baixar site (GitHub Pages)"</b> — isso gera um único arquivo <code>index.html</code> autocontido com seu currículo. Veja o passo a passo completo no <code>README.md</code> deste repositório.</p>
+  <p><b>Como gerar o PDF:</b> clique em <b>"🖨️ Exportar PDF"</b>, escolha "Salvar como PDF" na janela de impressão do navegador e desmarque "cabeçalhos e rodapés". Esse método usa a impressão nativa do navegador — sem bibliotecas externas — e garante um PDF com texto pesquisável/selecionável, ideal para sistemas de triagem (ATS).</p>
+  <p style="color:var(--text-muted);">Todos os dados ficam apenas no seu navegador (localStorage) — nada é enviado para nenhum servidor.</p>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
