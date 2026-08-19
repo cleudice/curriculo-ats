@@ -328,6 +328,29 @@ textarea{resize:vertical;min-height:60px;line-height:1.4;}
 .resume .item-title{font-weight:700;color:#111;}
 .resume .item-sub{color:#333;font-weight:500;}
 .resume .item-date{color:#555;font-size:9.5pt;white-space:nowrap;font-weight:600;}
+.resume .company-group{margin-bottom:8px;}
+.resume .company-group:last-child{margin-bottom:0;}
+.resume .company-header{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10.5pt;
+  font-weight:700;
+  color:#111;
+}
+.resume .role-item{
+  margin-top:6px;
+  padding-left:10px;
+  border-left:2px solid #d8d8d8;
+}
+.resume .role-top{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10pt;
+}
+.resume .role-title{font-weight:600;color:#222;}
+.resume .role-date{color:#555;font-size:9pt;white-space:nowrap;font-weight:600;}
 .resume ul.bullets{
   margin:4px 0 0;
   padding-left:16px;

@@ -289,19 +289,62 @@
 
     const skills = (s.habilidades || "").split(",").map(x => x.trim()).filter(Boolean);
 
-    const expHtml = s.experiencia.length ? s.experiencia.map(e => {
-      const periodo = (e.inicio || e.fim || e.atual)
-        ? `${fmtMonth(e.inicio) || "?"} — ${e.atual ? "Atual" : (fmtMonth(e.fim) || "?")}`
+    const periodoExp = (e) => (e.inicio || e.fim || e.atual)
+      ? `${fmtMonth(e.inicio) || "?"} — ${e.atual ? "Atual" : (fmtMonth(e.fim) || "?")}`
+      : "";
+    const bulletsOf = (texto) => (texto || "").split("\n").map(l => l.trim()).filter(Boolean)
+      .map(l => `<li>${escapeHtml(l)}</li>`).join("");
+
+    // agrupa cargos consecutivos na mesma empresa (progressão de carreira interna)
+    const expGroups = [];
+    s.experiencia.forEach(e => {
+      const key = (e.empresa || "").trim().toLowerCase();
+      const last = expGroups[expGroups.length - 1];
+      if (key && last && last.key === key) last.entries.push(e);
+      else expGroups.push({ key, empresa: e.empresa, entries: [e] });
+    });
+
+    const expHtml = s.experiencia.length ? expGroups.map(g => {
+      if (g.entries.length === 1) {
+        const e = g.entries[0];
+        const periodo = periodoExp(e);
+        const bullets = bulletsOf(e.descricao);
+        return `
+          <div class="item">
+            <div class="item-top">
+              <div><span class="item-title">${escapeHtml(e.cargo)}</span>${e.empresa ? ` <span class="item-sub">· ${escapeHtml(e.empresa)}</span>` : ""}</div>
+              ${periodo ? `<div class="item-date">${periodo}</div>` : ""}
+            </div>
+            ${bullets ? `<ul class="bullets">${bullets}</ul>` : ""}
+          </div>`;
+      }
+      const comInicio = g.entries.filter(e => e.inicio);
+      const comFim = g.entries.filter(e => e.fim);
+      const minInicio = comInicio.length ? comInicio.reduce((min, e) => e.inicio < min ? e.inicio : min, comInicio[0].inicio) : "";
+      const maxFim = comFim.length ? comFim.reduce((max, e) => e.fim > max ? e.fim : max, comFim[0].fim) : "";
+      const algumAtual = g.entries.some(e => e.atual);
+      const periodoGrupo = (minInicio || maxFim || algumAtual)
+        ? `${fmtMonth(minInicio) || "?"} — ${algumAtual ? "Atual" : (fmtMonth(maxFim) || "?")}`
         : "";
-      const bullets = (e.descricao || "").split("\n").map(l => l.trim()).filter(Boolean)
-        .map(l => `<li>${escapeHtml(l)}</li>`).join("");
+      const roles = g.entries.map(e => {
+        const periodo = periodoExp(e);
+        const bullets = bulletsOf(e.descricao);
+        return `
+          <div class="role-item">
+            <div class="role-top">
+              <span class="role-title">${escapeHtml(e.cargo)}</span>
+              ${periodo ? `<span class="role-date">${periodo}</span>` : ""}
+            </div>
+            ${bullets ? `<ul class="bullets">${bullets}</ul>` : ""}
+          </div>`;
+      }).join("");
       return `
-        <div class="item">
-          <div class="item-top">
-            <div><span class="item-title">${escapeHtml(e.cargo)}</span>${e.empresa ? ` <span class="item-sub">· ${escapeHtml(e.empresa)}</span>` : ""}</div>
-            ${periodo ? `<div class="item-date">${periodo}</div>` : ""}
+        <div class="company-group">
+          <div class="company-header">
+            <span>${escapeHtml(g.empresa)}</span>
+            ${periodoGrupo ? `<span class="item-date">${periodoGrupo}</span>` : ""}
           </div>
-          ${bullets ? `<ul class="bullets">${bullets}</ul>` : ""}
+          ${roles}
         </div>`;
     }).join("") : `<p class="empty-note">Nenhuma experiência adicionada ainda.</p>`;
 
@@ -520,6 +563,13 @@
       .resume .item-title{font-weight:700;color:#111;}
       .resume .item-sub{color:#333;font-weight:500;}
       .resume .item-date{color:#555;font-size:9.5pt;white-space:nowrap;font-weight:600;}
+      .resume .company-group{margin-bottom:8px;}
+      .resume .company-group:last-child{margin-bottom:0;}
+      .resume .company-header{display:flex;justify-content:space-between;gap:8px;font-size:10.5pt;font-weight:700;color:#111;}
+      .resume .role-item{margin-top:6px;padding-left:10px;border-left:2px solid #d8d8d8;}
+      .resume .role-top{display:flex;justify-content:space-between;gap:8px;font-size:10pt;}
+      .resume .role-title{font-weight:600;color:#222;}
+      .resume .role-date{color:#555;font-size:9pt;white-space:nowrap;font-weight:600;}
       .resume ul.bullets{margin:4px 0 0;padding-left:16px;}
       .resume ul.bullets li{font-size:10pt;margin-bottom:2px;color:#222;}
       .resume .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;}
