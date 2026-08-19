@@ -306,7 +306,10 @@
     }).join("") : `<p class="empty-note">Nenhuma experiência adicionada ainda.</p>`;
 
     const formHtml = s.formacao.length ? s.formacao.map(f => {
-      const periodo = (f.inicio || f.fim) ? `${fmtMonth(f.inicio) || "?"} — ${fmtMonth(f.fim) || "atual"}` : "";
+      let periodo = "";
+      if (f.inicio && f.fim) periodo = `${fmtMonth(f.inicio)} — ${fmtMonth(f.fim)}`;
+      else if (f.inicio) periodo = `${fmtMonth(f.inicio)} — atual`;
+      else if (f.fim) periodo = fmtMonth(f.fim);
       return `
         <div class="item">
           <div class="item-top">
