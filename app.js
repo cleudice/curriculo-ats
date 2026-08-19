@@ -9,6 +9,7 @@
     resumo: "", habilidades: "", certificacoes: "", extra: "",
     prioridadeFormacao: false,
     modoVisual: false,
+    corVisual: "#1e3a5f",
     experiencia: [],
     formacao: [],
     idiomas: [],
@@ -79,8 +80,17 @@
 
   function setupModeToggle() {
     const buttons = $all("#modeToggle button");
+    const colorPicker = $("#colorPicker");
+    const colorButtons = $all("#colorPicker button");
+
+    const applyColor = () => {
+      document.documentElement.style.setProperty("--visual-accent", state.corVisual || "#1e3a5f");
+      colorButtons.forEach(b => b.classList.toggle("active", b.dataset.color === state.corVisual));
+    };
     const sync = () => {
       buttons.forEach(b => b.classList.toggle("active", (b.dataset.mode === "visual") === !!state.modoVisual));
+      colorPicker.classList.toggle("show", !!state.modoVisual);
+      applyColor();
     };
     buttons.forEach(b => {
       b.addEventListener("click", () => {
@@ -88,6 +98,13 @@
         save();
         sync();
         renderPreview();
+      });
+    });
+    colorButtons.forEach(b => {
+      b.addEventListener("click", () => {
+        state.corVisual = b.dataset.color;
+        save();
+        applyColor();
       });
     });
     sync();
@@ -478,8 +495,9 @@
 
   function buildStandaloneSite(s) {
     const resumeHtml = buildResumeHtml(s);
+    const corVisual = /^#[0-9a-fA-F]{6}$/.test(s.corVisual || "") ? s.corVisual : "#1e3a5f";
     const cssResumeVars = `
-      :root{--accent:#1d4ed8;--accent-soft:#e8edfc;}
+      :root{--accent:#1d4ed8;--accent-soft:#e8edfc;--visual-accent:${corVisual};}
       *{box-sizing:border-box;}
       body{margin:0;background:#eef0f3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:24px 12px;}
       .page{background:#fff;max-width:210mm;min-height:297mm;margin:0 auto;padding:16mm;box-shadow:0 1px 4px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.06);border-radius:2px;}
@@ -506,7 +524,7 @@
       .resume .lang-row{display:flex;justify-content:space-between;font-size:10pt;margin-bottom:2px;}
       .resume .lang-row .level{color:#555;}
       .visual-wrap{display:flex;align-items:stretch;min-height:297mm;}
-      .sidebar{flex:0 0 66mm;background:var(--accent);color:#fff;padding:16mm 9mm;display:flex;flex-direction:column;gap:12px;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+      .sidebar{flex:0 0 66mm;background:var(--visual-accent);color:#fff;padding:16mm 9mm;display:flex;flex-direction:column;gap:12px;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
       .main-col{flex:1;min-width:0;padding:16mm 12mm;}
       .photo-visual{width:30mm;height:30mm;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);align-self:center;}
       .name-visual{font-size:15pt;font-weight:800;margin:8px 0 0;text-align:center;color:#fff;line-height:1.25;}

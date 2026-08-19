@@ -16,6 +16,14 @@
       <button type="button" data-mode="ats" class="active" title="Uma coluna, sem cor de fundo — passa por sistemas de triagem automática (ATS)">🛡️ ATS</button>
       <button type="button" data-mode="visual" title="Barra lateral colorida — use só quando souber que um humano vai ler direto, sem triagem automática">🎨 Visual</button>
     </div>
+    <div class="color-picker" id="colorPicker" role="group" aria-label="Cor da barra lateral">
+      <button type="button" data-color="#1e3a5f" style="background:#1e3a5f" title="Azul-marinho"></button>
+      <button type="button" data-color="#2f3336" style="background:#2f3336" title="Grafite"></button>
+      <button type="button" data-color="#12494a" style="background:#12494a" title="Verde-azulado"></button>
+      <button type="button" data-color="#445168" style="background:#445168" title="Cinza-azulado"></button>
+      <button type="button" data-color="#6e2439" style="background:#6e2439" title="Bordô"></button>
+      <button type="button" data-color="#93472e" style="background:#93472e" title="Terracota"></button>
+    </div>
     <button id="btnImport" class="ghost">📂 Importar JSON</button>
     <input type="file" id="fileImport" accept="application/json">
     <button id="btnExportJson" class="ghost">💾 Salvar JSON</button>
@@ -196,6 +204,7 @@
   <p><b>Como publicar seu currículo como site (GitHub Pages):</b> clique em <b>"🌐 Baixar site (GitHub Pages)"</b> — isso gera um único arquivo <code>index.html</code> autocontido com seu currículo. Veja o passo a passo completo no <code>README.md</code> deste repositório.</p>
   <p><b>Como gerar o PDF:</b> clique em <b>"🖨️ Exportar PDF"</b>, escolha "Salvar como PDF" na janela de impressão do navegador e desmarque "cabeçalhos e rodapés". Esse método usa a impressão nativa do navegador — sem bibliotecas externas — e garante um PDF com texto pesquisável/selecionável, ideal para sistemas de triagem (ATS).</p>
   <p><b>🛡️ ATS vs 🎨 Visual:</b> o botão no topo da página alterna entre os dois formatos. Use <b>ATS</b> (padrão) sempre que o currículo for enviado por um portal de vagas, formulário online ou e-mail para uma empresa maior — é o formato que sistemas de triagem automática conseguem ler sem perder informação. Use <b>Visual</b> só quando souber que um humano vai abrir o arquivo direto (indicação, e-mail pessoal para o gestor, empresa pequena sem processo formal) ou em áreas onde o currículo também é peça de portfólio (design, publicidade). O conteúdo recomendado (sem foto, sem CPF/RG, resultados quantificados, 1–2 páginas) continua valendo nos dois formatos — o que muda é só a estrutura visual.</p>
+  <p><b>🎨 Sobre as cores do modo Visual:</b> de propósito, todas as opções são tons escuros e dessaturados (azul-marinho, grafite, verde-azulado, cinza-azulado, bordô, terracota) — nunca cores vivas/neon. Cor muito saturada em bloco cheio lê como pouco profissional e ainda reduz o contraste do texto branco por cima. Um único tom de cor, usado com moderação, é o que o mercado hoje associa a "cuidado com o design" sem parecer chamativo — o mesmo princípio por trás da estética "quiet luxury" que vem substituindo o azul vivo genérico dos templates de currículo de alguns anos atrás. Para áreas mais conservadoras (jurídico, financeiro, órgão público), prefira grafite ou azul-marinho; para áreas criativas, bordô ou terracota já trazem um pouco mais de personalidade sem exagerar.</p>
   <p style="color:var(--text-muted);">Todos os dados ficam apenas no seu navegador (localStorage) — nada é enviado para nenhum servidor.</p>
 </div>
 
