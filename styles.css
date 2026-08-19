@@ -77,6 +77,22 @@ button.primary:hover{background:#1740b0;}
 button.ghost{background:transparent;}
 button.danger{color:var(--danger);border-color:#f0d3d0;}
 button.small{padding:4px 9px;font-size:12px;}
+.mode-toggle{
+  display:flex;
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  margin-right:4px;
+}
+.mode-toggle button{
+  border:none;
+  border-radius:0;
+  background:var(--panel);
+  padding:8px 12px;
+}
+.mode-toggle button + button{border-left:1px solid var(--border);}
+.mode-toggle button.active{background:var(--accent);color:#fff;}
+.mode-toggle button.active:hover{background:var(--accent);}
 input[type=file]{display:none;}
 
 /* ---------- Layout ---------- */
@@ -229,6 +245,7 @@ textarea{resize:vertical;min-height:60px;line-height:1.4;}
     padding:8mm;
   }
 }
+.page.visual{padding:0;}
 .resume{
   font-family: var(--font);
   color:#1a1a1a;
@@ -313,6 +330,49 @@ textarea{resize:vertical;min-height:60px;line-height:1.4;}
 .resume .lang-row{display:flex;justify-content:space-between;font-size:10pt;margin-bottom:2px;}
 .resume .lang-row .level{color:#555;}
 .resume .empty-note{color:#999;font-style:italic;font-size:9.5pt;}
+
+/* ---------- Visual template (sidebar) — for when a human reads it directly, not an ATS ---------- */
+.visual-wrap{
+  display:flex;
+  align-items:stretch;
+  min-height:297mm;
+}
+.sidebar{
+  flex:0 0 66mm;
+  background:var(--accent);
+  color:#fff;
+  padding:16mm 9mm;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  print-color-adjust:exact;
+  -webkit-print-color-adjust:exact;
+}
+.main-col{
+  flex:1;
+  min-width:0;
+  padding:16mm 12mm;
+}
+.photo-visual{
+  width:30mm;height:30mm;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid rgba(255,255,255,.4);
+  align-self:center;
+}
+.name-visual{font-size:15pt;font-weight:800;margin:8px 0 0;text-align:center;color:#fff;line-height:1.25;}
+.role-visual{font-size:9.5pt;text-align:center;color:rgba(255,255,255,.85);margin:3px 0 0;font-weight:600;}
+.side-contact{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:8.8pt;color:#fff;word-break:break-word;}
+.sidebar .block-title{color:#fff;border-bottom-color:rgba(255,255,255,.35);}
+.sidebar .tag{background:rgba(255,255,255,.18);color:#fff;}
+.sidebar .lang-row{color:#fff;}
+.sidebar .lang-row .level{color:rgba(255,255,255,.75);}
+.sidebar ul.bullets li{color:rgba(255,255,255,.9);}
+.sidebar .item-title, .sidebar .item-sub, .sidebar .item-date{color:#fff;}
+@media (max-width: 780px){
+  .sidebar{flex-basis:40mm;padding:10mm 6mm;}
+  .main-col{padding:10mm 8mm;}
+}
 
 .footer-note{
   max-width:1500px;

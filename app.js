@@ -8,6 +8,7 @@
     linkedin: "", github: "", foto: "",
     resumo: "", habilidades: "", certificacoes: "", extra: "",
     prioridadeFormacao: false,
+    modoVisual: false,
     experiencia: [],
     formacao: [],
     idiomas: [],
@@ -74,6 +75,22 @@
       el.addEventListener("input", handler);
       if (isCheckbox || el.tagName === "SELECT") el.addEventListener("change", handler);
     });
+  }
+
+  function setupModeToggle() {
+    const buttons = $all("#modeToggle button");
+    const sync = () => {
+      buttons.forEach(b => b.classList.toggle("active", (b.dataset.mode === "visual") === !!state.modoVisual));
+    };
+    buttons.forEach(b => {
+      b.addEventListener("click", () => {
+        state.modoVisual = b.dataset.mode === "visual";
+        save();
+        sync();
+        renderPreview();
+      });
+    });
+    sync();
   }
 
   function setupAreaHint() {
@@ -245,13 +262,13 @@
   }
 
   // ---------------- preview / resume markup (shared with standalone export) ----------------
-  function buildResumeHtml(s) {
-    const contactParts = [];
-    if (s.telefone) contactParts.push(`<span>📞 ${escapeHtml(s.telefone)}</span>`);
-    if (s.email) contactParts.push(`<span>✉️ ${escapeHtml(s.email)}</span>`);
-    if (s.cidade) contactParts.push(`<span>📍 ${escapeHtml(s.cidade)}</span>`);
-    if (s.linkedin) contactParts.push(`<span>🔗 ${escapeHtml(s.linkedin)}</span>`);
-    if (s.github) contactParts.push(`<span>💻 ${escapeHtml(s.github)}</span>`);
+  function buildResumeParts(s) {
+    const contactItems = [];
+    if (s.telefone) contactItems.push(["📞", s.telefone]);
+    if (s.email) contactItems.push(["✉️", s.email]);
+    if (s.cidade) contactItems.push(["📍", s.cidade]);
+    if (s.linkedin) contactItems.push(["🔗", s.linkedin]);
+    if (s.github) contactItems.push(["💻", s.github]);
 
     const skills = (s.habilidades || "").split(",").map(x => x.trim()).filter(Boolean);
 
@@ -307,37 +324,76 @@
     const experienciaBlock = `<section class="block"><h2 class="block-title">Experiência profissional</h2>${expHtml}</section>`;
     const formacaoBlock = formHtml ? `<section class="block"><h2 class="block-title">Formação acadêmica</h2>${formHtml}</section>` : "";
     const expFormBlocks = s.prioridadeFormacao ? formacaoBlock + experienciaBlock : experienciaBlock + formacaoBlock;
+    const skillsBlock = skills.length ? `<section class="block"><h2 class="block-title">Habilidades</h2><div class="tags">${skills.map(sk => `<span class="tag">${escapeHtml(sk)}</span>`).join("")}</div></section>` : "";
+    const idiomasBlock = idiomasHtml ? `<section class="block"><h2 class="block-title">Idiomas</h2>${idiomasHtml}</section>` : "";
+    const certBlock = certHtml ? `<section class="block"><h2 class="block-title">Certificações e cursos</h2>${certHtml}</section>` : "";
+    const projetosBlock = projetosHtml ? `<section class="block"><h2 class="block-title">Projetos</h2>${projetosHtml}</section>` : "";
+    const resumoBlock = s.resumo ? `<section class="block"><h2 class="block-title">Resumo</h2><p class="summary">${escapeHtml(s.resumo)}</p></section>` : "";
+    const extraBlock = s.extra ? `<section class="block"><h2 class="block-title">Informações adicionais</h2><p class="summary">${escapeHtml(s.extra)}</p></section>` : "";
 
+    return { contactItems, resumoBlock, expFormBlocks, skillsBlock, idiomasBlock, certBlock, projetosBlock, customHtml, extraBlock };
+  }
+
+  function buildResumeHtmlATS(s) {
+    const p = buildResumeParts(s);
+    const contactLine = p.contactItems.length
+      ? `<div class="contact-line">${p.contactItems.map(([icon, text]) => `<span>${icon} ${escapeHtml(text)}</span>`).join("")}</div>`
+      : "";
     return `
       <header class="head">
         ${s.foto ? `<img class="photo" src="${escapeHtml(s.foto)}" alt="Foto de perfil">` : ""}
         <div>
           <h1 class="name">${escapeHtml(s.nome) || "Seu Nome"}</h1>
           ${s.cargo ? `<p class="role">${escapeHtml(s.cargo)}</p>` : ""}
-          ${contactParts.length ? `<div class="contact-line">${contactParts.join("")}</div>` : ""}
+          ${contactLine}
         </div>
       </header>
 
-      ${s.resumo ? `<section class="block"><h2 class="block-title">Resumo</h2><p class="summary">${escapeHtml(s.resumo)}</p></section>` : ""}
-
-      ${expFormBlocks}
-
-      ${skills.length ? `<section class="block"><h2 class="block-title">Habilidades</h2><div class="tags">${skills.map(sk => `<span class="tag">${escapeHtml(sk)}</span>`).join("")}</div></section>` : ""}
-
-      ${idiomasHtml ? `<section class="block"><h2 class="block-title">Idiomas</h2>${idiomasHtml}</section>` : ""}
-
-      ${certHtml ? `<section class="block"><h2 class="block-title">Certificações e cursos</h2>${certHtml}</section>` : ""}
-
-      ${projetosHtml ? `<section class="block"><h2 class="block-title">Projetos</h2>${projetosHtml}</section>` : ""}
-
-      ${customHtml}
-
-      ${s.extra ? `<section class="block"><h2 class="block-title">Informações adicionais</h2><p class="summary">${escapeHtml(s.extra)}</p></section>` : ""}
+      ${p.resumoBlock}
+      ${p.expFormBlocks}
+      ${p.skillsBlock}
+      ${p.idiomasBlock}
+      ${p.certBlock}
+      ${p.projetosBlock}
+      ${p.customHtml}
+      ${p.extraBlock}
     `;
+  }
+
+  function buildResumeHtmlVisual(s) {
+    const p = buildResumeParts(s);
+    const contactList = p.contactItems.length
+      ? `<ul class="side-contact">${p.contactItems.map(([icon, text]) => `<li>${icon} ${escapeHtml(text)}</li>`).join("")}</ul>`
+      : "";
+    return `
+      <div class="visual-wrap">
+        <aside class="sidebar">
+          ${s.foto ? `<img class="photo-visual" src="${escapeHtml(s.foto)}" alt="Foto de perfil">` : ""}
+          <h1 class="name-visual">${escapeHtml(s.nome) || "Seu Nome"}</h1>
+          ${s.cargo ? `<p class="role-visual">${escapeHtml(s.cargo)}</p>` : ""}
+          ${contactList}
+          ${p.skillsBlock}
+          ${p.idiomasBlock}
+          ${p.certBlock}
+        </aside>
+        <main class="main-col">
+          ${p.resumoBlock}
+          ${p.expFormBlocks}
+          ${p.projetosBlock}
+          ${p.customHtml}
+          ${p.extraBlock}
+        </main>
+      </div>
+    `;
+  }
+
+  function buildResumeHtml(s) {
+    return s.modoVisual ? buildResumeHtmlVisual(s) : buildResumeHtmlATS(s);
   }
 
   function renderPreview() {
     $("#resumePreview").innerHTML = buildResumeHtml(state);
+    $(".page").classList.toggle("visual", !!state.modoVisual);
   }
 
   // ---------------- top bar actions ----------------
@@ -449,6 +505,20 @@
       .resume .tag{font-size:9pt;background:var(--accent-soft);color:#1a3a99;padding:2px 8px;border-radius:20px;font-weight:600;}
       .resume .lang-row{display:flex;justify-content:space-between;font-size:10pt;margin-bottom:2px;}
       .resume .lang-row .level{color:#555;}
+      .visual-wrap{display:flex;align-items:stretch;min-height:297mm;}
+      .sidebar{flex:0 0 66mm;background:var(--accent);color:#fff;padding:16mm 9mm;display:flex;flex-direction:column;gap:12px;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+      .main-col{flex:1;min-width:0;padding:16mm 12mm;}
+      .photo-visual{width:30mm;height:30mm;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);align-self:center;}
+      .name-visual{font-size:15pt;font-weight:800;margin:8px 0 0;text-align:center;color:#fff;line-height:1.25;}
+      .role-visual{font-size:9.5pt;text-align:center;color:rgba(255,255,255,.85);margin:3px 0 0;font-weight:600;}
+      .side-contact{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:8.8pt;color:#fff;word-break:break-word;}
+      .sidebar .block-title{color:#fff;border-bottom-color:rgba(255,255,255,.35);}
+      .sidebar .tag{background:rgba(255,255,255,.18);color:#fff;}
+      .sidebar .lang-row{color:#fff;}
+      .sidebar .lang-row .level{color:rgba(255,255,255,.75);}
+      .sidebar ul.bullets li{color:rgba(255,255,255,.9);}
+      .sidebar .item-title, .sidebar .item-sub, .sidebar .item-date{color:#fff;}
+      .page.visual{padding:0;}
       .printbar{max-width:210mm;margin:0 auto 10px;display:flex;justify-content:flex-end;}
       .printbar button{font-family:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;}
       @media print{
@@ -469,7 +539,7 @@
 </head>
 <body>
   <div class="printbar"><button onclick="window.print()">🖨️ Baixar / imprimir PDF</button></div>
-  <div class="page"><div class="resume">${resumeHtml}</div></div>
+  <div class="page${s.modoVisual ? " visual" : ""}"><div class="resume">${resumeHtml}</div></div>
 </body>
 </html>`;
   }
@@ -483,6 +553,7 @@
 
   // ---------------- init ----------------
   bindSimpleFields();
+  setupModeToggle();
   setupAreaHint();
   setupLists();
   setupTopbar();

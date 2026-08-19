@@ -9,10 +9,11 @@ Feito como alternativa moderna ao gerador do 4devs.com.br, com um formulário re
 1. Abra `index.html` no navegador (duplo clique no arquivo, ou sirva com qualquer servidor estático).
 2. Preencha o formulário à esquerda — a prévia à direita atualiza em tempo real.
 3. Use os botões no topo:
+   - **🛡️ ATS / 🎨 Visual** — alterna o formato do currículo. **ATS** (padrão) é uma coluna só, sem cor de fundo, pensado para passar por sistemas de triagem automática. **Visual** usa uma barra lateral colorida com foto — só recomendado quando você sabe que um humano vai abrir o arquivo direto (indicação, e-mail pessoal, empresa pequena) ou em áreas onde o currículo também é peça de portfólio (design, publicidade). O conteúdo recomendado (sem foto por padrão, sem CPF/RG, resultados quantificados) vale nos dois formatos — só a estrutura visual muda.
    - **💾 Salvar JSON** — baixa um backup dos seus dados (`curriculo-seu-nome.json`).
    - **📂 Importar JSON** — recarrega dados salvos anteriormente.
    - **🖨️ Exportar PDF** — abre a caixa de impressão do navegador; escolha "Salvar como PDF". Gera um PDF com texto real (selecionável/pesquisável), ideal para sistemas de triagem automática (ATS).
-   - **🌐 Baixar site (GitHub Pages)** — gera um `index.html` autocontido (CSS embutido) apenas com o currículo, pronto para publicar como site.
+   - **🌐 Baixar site (GitHub Pages)** — gera um `index.html` autocontido (CSS embutido) apenas com o currículo, no formato (ATS ou Visual) selecionado no momento, pronto para publicar como site.
 
 Seus dados também ficam salvos automaticamente no navegador (localStorage), então se você fechar a aba e voltar depois, o formulário continua preenchido.
 

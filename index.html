@@ -12,6 +12,10 @@
 <div class="topbar">
   <h1>📄 Gerador de Currículo <small>offline · sem servidor · seus dados não saem do navegador</small></h1>
   <div class="actions">
+    <div class="mode-toggle" id="modeToggle" role="group" aria-label="Formato do currículo">
+      <button type="button" data-mode="ats" class="active" title="Uma coluna, sem cor de fundo — passa por sistemas de triagem automática (ATS)">🛡️ ATS</button>
+      <button type="button" data-mode="visual" title="Barra lateral colorida — use só quando souber que um humano vai ler direto, sem triagem automática">🎨 Visual</button>
+    </div>
     <button id="btnImport" class="ghost">📂 Importar JSON</button>
     <input type="file" id="fileImport" accept="application/json">
     <button id="btnExportJson" class="ghost">💾 Salvar JSON</button>
@@ -73,7 +77,7 @@
             <input type="text" data-field="foto" placeholder="https://.../foto.jpg">
           </label>
         </div>
-        <p class="hint warn">⚠️ Foto, CPF/RG, estado civil, religião e data de nascimento foram deixados de fora de propósito. Recrutadores no Brasil e sistemas ATS recomendam <b>não incluir</b> essas informações: elas não têm relação com a vaga, expõem dados sensíveis (LGPD) e podem introduzir viés inconsciente na triagem. Veja o guia completo no rodapé da página.</p>
+        <p class="hint warn">⚠️ Foto, CPF/RG, estado civil, religião e data de nascimento foram deixados de fora de propósito. Recrutadores no Brasil e sistemas ATS recomendam <b>não incluir</b> essas informações: elas não têm relação com a vaga, expõem dados sensíveis (LGPD) e podem introduzir viés inconsciente na triagem. A foto só aparece se você preencher o campo acima, e é usada com destaque no modo <b>🎨 Visual</b> (topo da página) — use apenas quando souber que um humano vai ler direto, sem passar por triagem automática. Veja o guia completo no rodapé da página.</p>
       </div>
     </details>
 
@@ -191,6 +195,7 @@
   <p>Este gerador já aplica essas boas práticas por padrão: por isso campos como foto, CPF/RG e estado civil não aparecem no formulário principal — apenas na seção opcional "Zona de risco", caso você realmente precise deles. Para necessidades específicas de área (registro profissional, publicações, prêmios, voluntariado...), use a seção <b>"Seções personalizadas"</b> — o seletor <b>"Área de atuação"</b> no topo do formulário só ajusta as dicas de preenchimento, não aparece no currículo.</p>
   <p><b>Como publicar seu currículo como site (GitHub Pages):</b> clique em <b>"🌐 Baixar site (GitHub Pages)"</b> — isso gera um único arquivo <code>index.html</code> autocontido com seu currículo. Veja o passo a passo completo no <code>README.md</code> deste repositório.</p>
   <p><b>Como gerar o PDF:</b> clique em <b>"🖨️ Exportar PDF"</b>, escolha "Salvar como PDF" na janela de impressão do navegador e desmarque "cabeçalhos e rodapés". Esse método usa a impressão nativa do navegador — sem bibliotecas externas — e garante um PDF com texto pesquisável/selecionável, ideal para sistemas de triagem (ATS).</p>
+  <p><b>🛡️ ATS vs 🎨 Visual:</b> o botão no topo da página alterna entre os dois formatos. Use <b>ATS</b> (padrão) sempre que o currículo for enviado por um portal de vagas, formulário online ou e-mail para uma empresa maior — é o formato que sistemas de triagem automática conseguem ler sem perder informação. Use <b>Visual</b> só quando souber que um humano vai abrir o arquivo direto (indicação, e-mail pessoal para o gestor, empresa pequena sem processo formal) ou em áreas onde o currículo também é peça de portfólio (design, publicidade). O conteúdo recomendado (sem foto, sem CPF/RG, resultados quantificados, 1–2 páginas) continua valendo nos dois formatos — o que muda é só a estrutura visual.</p>
   <p style="color:var(--text-muted);">Todos os dados ficam apenas no seu navegador (localStorage) — nada é enviado para nenhum servidor.</p>
 </div>
 
